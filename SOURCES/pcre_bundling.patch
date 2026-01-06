@@ -1,0 +1,15 @@
+diff --git a/cmake/pcre.cmake b/cmake/pcre.cmake
+index 08353e92..fc869ba9 100644
+--- a/cmake/pcre.cmake
++++ b/cmake/pcre.cmake
+@@ -64,8 +64,8 @@ MACRO(BUNDLE_PCRE2)
+   ExternalProject_Add(
+     pcre2
+     PREFIX   "${dir}"
+-    URL "https://github.com/PCRE2Project/pcre2/releases/download/pcre2-10.45/pcre2-10.45.zip"
+-    URL_MD5 873da56c6469ec207ca5c5ae9688b83a
++    URL "file:///${dir}/pcre2-10.46.zip"
++    URL_MD5 261f3f9e14b6ce175103c5118a189faa
+     INSTALL_COMMAND ""
+     CMAKE_ARGS
+       "-DCMAKE_WARN_DEPRECATED=FALSE"
