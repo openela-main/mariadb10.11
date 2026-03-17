@@ -153,7 +153,7 @@
 
 Name:             %{majorname}%{majorversion}
 Version:          %{package_version}
-Release:          1%{?with_debug:.debug}%{?dist}
+Release:          2%{?with_debug:.debug}%{?dist}
 Epoch:            3
 
 Summary:          A very fast and robust SQL database server
@@ -975,8 +975,7 @@ CXXFLAGS="$CFLAGS"; CPPFLAGS="$CFLAGS"; export CFLAGS CXXFLAGS CPPFLAGS
          -DINSTALL_SCRIPTDIR=bin \
          -DINSTALL_SUPPORTFILESDIR=share/%{majorname} \
          -DMYSQL_DATADIR="%{dbdatadir}" \
-         -DMYSQL_UNIX_ADDR="/var/lib/mysql/mysql.sock" \
-         -DTMPDIR=/var/tmp \
+         -DTMPDIR=%{_localstatedir}/tmp \
          -DGRN_DATA_DIR=share/%{majorname}-server/groonga \
          -DGROONGA_NORMALIZER_MYSQL_PROJECT_NAME=%{majorname}-server/groonga-normalizer-mysql \
          -DENABLED_LOCAL_INFILE=ON \
@@ -1812,6 +1811,9 @@ fi
 %endif
 
 %changelog
+* Tue Jan 20 2026 Petr Khartskhaev <pkhartsk@redhat.com> - 3:10.11.15-2
+- Updated service files to work with environment files
+
 * Mon Dec 01 2025 Petr Khartskhaev <pkhartsk@redhat.com> - 3:10.11.15-1
 - Rebase to 10.11.15
 - Resolves: RHBZ#2417697
