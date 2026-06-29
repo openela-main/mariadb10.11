@@ -18,6 +18,8 @@ sys_vars.slave_parallel_threads_basic        :
 # Expected to fail, the plugin is not build with server, but 'mariadb-connector-c' instead
 plugins.auth_ed25519                         :
 plugins.multiauth                            :
+plugins.mdev38431                            :
+plugins.mdev38550                            :
 
 # ------------------------------
 perfschema.nesting                           : #1399847
@@ -125,3 +127,6 @@ encryption.compressed_import_tablespace     :
 
 # Unstable since 10.11.11
 parts.partition_alter1_1_2_innodb           :
+
+# Fails since 10.11.17
+main.chained_ssl_certificates               :
