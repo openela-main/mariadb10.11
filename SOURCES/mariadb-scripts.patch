@@ -1,10 +1,7 @@
-We have some downstream patches and other scripts that include variables to
-be expanded by cmake. Cmake needs to know about them, so adding them manually.
-
- # Install libgcc as  mylibgcc.a
---- mariadb-10.5.5/scripts/CMakeLists.txt.old	2020-09-24 10:13:35.272589689 +0200
-+++ mariadb-10.5.5/scripts/CMakeLists.txt	2020-09-24 10:17:31.428985798 +0200
-@@ -377,6 +377,34 @@
+diff -Naur mariadb-10.11.19/scripts/CMakeLists.txt mariadb-10.11.19_patched/scripts/CMakeLists.txt
+--- mariadb-10.11.19/scripts/CMakeLists.txt	2026-08-19 08:22:40.000000000 +0200
++++ mariadb-10.11.19_patched/scripts/CMakeLists.txt	2026-11-02 12:37:34.645260341 +0100
+@@ -391,6 +391,35 @@
        INSTALL_LINK(${file} ${binname} ${INSTALL_BINDIR} ${${file}_COMPONENT})
      ENDIF()
    ENDFOREACH()
@@ -17,6 +14,7 @@ be expanded by cmake. Cmake needs to know about them, so adding them manually.
 +    mariadb-prepare-db-dir
 +    mariadb-check-socket
 +    mariadb-check-upgrade
++    mariadb-check-user
 +    mariadb-scripts-common
 +    mysql_config_multilib
 +    clustercheck

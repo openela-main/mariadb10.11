@@ -1,6 +1,6 @@
 # Plain package name for cases, where %%{name} differs (e.g. for versioned packages)
 %global majorname mariadb
-%define package_version 10.11.18
+%define package_version 10.11.19
 %define majorversion %(echo %{package_version} | cut -d'.' -f1-2 )
 
 # Set if this package will be the default one in distribution
@@ -15,7 +15,7 @@
 # The last version on which the full testsuite has been run
 # In case of further rebuilds of that version, don't require full testsuite to be run
 # run only "main" suite
-%global last_tested_version 10.11.18
+%global last_tested_version 10.11.19
 # Set to 1 to force run the testsuite even if it was already tested in current version
 %global force_run_testsuite 0
 
@@ -123,7 +123,7 @@
 # See mariadb-libfmt.patch for detailed description.
 %bcond bundled_fmt 1
 %if %{with bundled_fmt}
-%global fmt_bundled_version 11.0.2
+%global fmt_bundled_version 12.2.0
 %endif
 
 # Include systemd files
@@ -175,6 +175,7 @@ Source14:         mariadb-check-socket.sh
 Source15:         mariadb-scripts-common.sh
 Source16:         mariadb-check-upgrade.sh
 Source18:         mysql@.service.in
+Source19:         mariadb-check-user.sh
 Source50:         rh-skipped-tests-base.list
 Source51:         rh-skipped-tests-arm.list
 Source52:         rh-skipped-tests-s390.list
@@ -880,12 +881,12 @@ cat %{SOURCE53} | tee -a mysql-test/unstable-tests
 %endif
 
 cp %{SOURCE2} %{SOURCE3} %{SOURCE10} %{SOURCE11} %{SOURCE12} \
-   %{SOURCE14} %{SOURCE15} %{SOURCE16} %{SOURCE18} %{SOURCE70} %{SOURCE73} scripts
+   %{SOURCE14} %{SOURCE15} %{SOURCE16} %{SOURCE18} %{SOURCE19} %{SOURCE70} %{SOURCE73} scripts
 
 # Create a sysusers.d config file
 # We no longer enforce the hardcoded UID/GID 27.
 cat > support-files/%{name}.sysusers.conf << EOF
-u mysql 27 'MariaDB and MySQL Server' %{dbdatadir} -
+u mysql 27 'MariaDB and MySQL Server' /nonexistent -
 EOF
 
 %if %{with galera}
@@ -1092,6 +1093,7 @@ install -D -p -m 644 %{_vpath_builddir}/scripts/mysql@.service %{buildroot}%{_un
 install -p -m 755 %{_vpath_builddir}/scripts/mariadb-prepare-db-dir %{buildroot}%{_libexecdir}/mariadb-prepare-db-dir
 install -p -m 755 %{_vpath_builddir}/scripts/mariadb-check-socket %{buildroot}%{_libexecdir}/mariadb-check-socket
 install -p -m 755 %{_vpath_builddir}/scripts/mariadb-check-upgrade %{buildroot}%{_libexecdir}/mariadb-check-upgrade
+install -p -m 755 %{_vpath_builddir}/scripts/mariadb-check-user %{buildroot}%{_libexecdir}/mariadb-check-user
 install -p -m 644 %{_vpath_builddir}/scripts/mariadb-scripts-common %{buildroot}%{_libexecdir}/mariadb-scripts-common
 
 # Install downstream version of tmpfiles
@@ -1283,7 +1285,7 @@ rm %{buildroot}%{_mandir}/man1/{mariadb-client-test-embedded,mariadb-test-embedd
 %endif
 %if %{with pam}
 rm %{buildroot}/suite/plugins/pam/mariadb_mtr
-rm %{buildroot}/suite/plugins/pam/pam_mariadb_mtr.so
+rm %{buildroot}%{_libdir}/%{majorname}/plugin/test_pam_modules/pam_mariadb_mtr.so
 # endif pam
 %endif
 rm %{buildroot}%{_bindir}/{mysql_client_test,mysqltest}
@@ -1380,7 +1382,7 @@ rm %{buildroot}%{_mandir}/man1/aria_s3_copy.1*
 
 %pre -n %{pkgname}-server
 /usr/sbin/groupadd -g 27 -o -r mysql >/dev/null 2>&1 || :
-/usr/sbin/useradd -M -N -g mysql -o -r -d %{dbdatadir} -s /sbin/nologin \
+/usr/sbin/useradd -M -N -g mysql -o -r -d /nonexistent -s /sbin/nologin \
   -c "MySQL Server" -u 27 mysql >/dev/null 2>&1 || :
 
 %post -n %{pkgname}-server
@@ -1668,6 +1670,7 @@ fi
 %{_libexecdir}/mariadb-prepare-db-dir
 %{_libexecdir}/mariadb-check-socket
 %{_libexecdir}/mariadb-check-upgrade
+%{_libexecdir}/mariadb-check-user
 %{_libexecdir}/mariadb-scripts-common
 
 # Remember to also update the mariadb.tmpfiles.d.in file when updating these permissions
@@ -1812,6 +1815,9 @@ fi
 %endif
 
 %changelog
+* Tue Oct 20 2026 Pavol Sloboda <psloboda@redhat.com> - 3:10.11.19-1
+- Rebase to 10.11.19
+
 * Wed Jun 03 2026 Pavol Sloboda <psloboda@redhat.com> - 3:10.11.18-1
 - Rebase to 10.11.18
 

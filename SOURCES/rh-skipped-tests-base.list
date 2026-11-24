@@ -130,3 +130,6 @@ parts.partition_alter1_1_2_innodb           :
 
 # Fails since 10.11.17
 main.chained_ssl_certificates               :
+
+# Fails since 10.11.19
+mariabackup.aria_log_dir_path               :

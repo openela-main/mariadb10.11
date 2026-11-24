@@ -18,14 +18,20 @@ To avoid potential issues on systems with FMT library between 8.0 and the one wi
 introduce a bundling mechanism for use on such distributions.
 We pre-download the sources archive and supply the CMake with it, instead of the web URL.
 
---- mariadb-10.11.10/cmake/libfmt.cmake	2024-10-29 15:32:31.000000000 +0100
-+++ mariadb-10.11.10/cmake/libfmt.cmake_patched	2024-11-14 12:06:35.961435488 +0100
-@@ -15,7 +15,7 @@ MACRO(BUNDLE_LIBFMT)
-   ExternalProject_Add(
-     libfmt
-     PREFIX   "${dir}"
--    URL      "https://github.com/fmtlib/fmt/releases/download/11.0.2/fmt-11.0.2.zip"
-+    URL      "file:///${dir}/fmt-11.0.2.zip"
-     URL_MD5 c622dca45ec3fc95254c48370a9f7a1d
-     INSTALL_COMMAND ""
-     CONFIGURE_COMMAND ""
+This patch is not used at the moment as the current version of the fmt package available in f40-f43 is sufficient
+therefore we are using it instead of the bundled fmt.
+
+We are still keeping this patch in case it may be needed in the future and because it is needed in rhel
+
+diff -Naur mariadb-11.8.9/cmake/libfmt.cmake mariadb-11.8.9_patched/cmake/libfmt.cmake
+--- mariadb-11.8.9/cmake/libfmt.cmake	2026-08-19 11:35:40.000000000 +0200
++++ mariadb-11.8.9_patched/cmake/libfmt.cmake	2026-10-20 13:32:30.877074250 +0200
+@@ -18,7 +18,7 @@
+     SET(source URL "https://github.com/fmtlib/fmt/releases/download/11.0.2/fmt-11.0.2.zip"
+                URL_MD5 c622dca45ec3fc95254c48370a9f7a1d)
+   ELSE()
+-    SET(source URL "https://github.com/fmtlib/fmt/releases/download/12.2.0/fmt-12.2.0.zip"
++    SET(source URL file:///${dir}/fmt-12.2.0.zip
+                URL_MD5 6083253772ad29e73a4d5920be08918e)
+   ENDIF()
+ 
